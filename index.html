@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Eng12Week</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="12주 로드맵">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">E12</div>
+          <div>
+            <h1>Eng12Week</h1>
+            <p>Adaptive speaking lab</p>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="section-label">Roadmap</div>
+          <div id="roadmapList" class="roadmap-list"></div>
+        </div>
+
+        <div class="sidebar-section compact">
+          <div class="section-label">Backup</div>
+          <div class="sidebar-actions">
+            <button class="icon-button" id="exportBtn" type="button">
+              <span class="icon" data-icon="download"></span>
+              Export
+            </button>
+            <label class="icon-button file-button">
+              <span class="icon" data-icon="upload"></span>
+              Import
+              <input id="importInput" type="file" accept="application/json" />
+            </label>
+          </div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">오늘의 학습</p>
+            <h2 id="currentTitle">Week 1 · Day 1</h2>
+          </div>
+          <div class="topbar-actions">
+            <div class="stat-chip">
+              <span>Routine</span>
+              <strong id="routinePercent">0%</strong>
+            </div>
+            <div class="stat-chip">
+              <span>Track</span>
+              <strong id="trackLabel">진단 전</strong>
+            </div>
+            <button class="icon-button primary" id="advanceDayBtn" type="button">
+              <span class="icon" data-icon="check"></span>
+              다음 Day
+            </button>
+          </div>
+        </header>
+
+        <nav class="tabbar" aria-label="주요 기능">
+          <button class="tab is-active" data-tab="today" type="button">Today</button>
+          <button class="tab" data-tab="diagnostic" type="button">Diagnostic</button>
+          <button class="tab" data-tab="srs" type="button">SRS</button>
+          <button class="tab" data-tab="weekly" type="button">Weekly</button>
+          <button class="tab" data-tab="prompts" type="button">Prompts</button>
+        </nav>
+
+        <section class="tab-panel is-active" id="todayPanel" data-panel="today">
+          <div class="grid two-one">
+            <section class="panel session-panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">30-minute session</span>
+                  <h3 id="sessionHeading">기초 회화 자동화</h3>
+                </div>
+                <div class="progress-ring" aria-label="오늘 루틴 완료율">
+                  <svg viewBox="0 0 44 44" aria-hidden="true">
+                    <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+                    <circle id="routineRing" class="ring-fill" cx="22" cy="22" r="18"></circle>
+                  </svg>
+                  <span id="routineRingText">0%</span>
+                </div>
+              </div>
+              <div id="routineSteps" class="routine-list"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">Target expressions</span>
+                  <h3>오늘의 표현</h3>
+                </div>
+                <span class="status-badge" id="weekPhaseBadge">Phase 1</span>
+              </div>
+              <div id="expressionList" class="expression-list"></div>
+            </section>
+          </div>
+
+          <div class="grid two">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">Role-play</span>
+                  <h3>실전 대화 시나리오</h3>
+                </div>
+                <button class="icon-button ghost" id="copyScenarioBtn" type="button">
+                  <span class="icon" data-icon="copy"></span>
+                  Copy
+                </button>
+              </div>
+              <p id="scenarioText" class="scenario-text"></p>
+              <div class="quick-questions" id="quickQuestions"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">Today log</span>
+                  <h3>오류 문장 기록</h3>
+                </div>
+                <button class="icon-button ghost" id="addErrorToSrsBtn" type="button">
+                  <span class="icon" data-icon="plus"></span>
+                  SRS 추가
+                </button>
+              </div>
+              <label class="field-label" for="errorSentence">오늘 반복된 오류</label>
+              <textarea id="errorSentence" rows="3" placeholder="예: Yesterday I go to clinic."></textarea>
+              <label class="field-label" for="fixedSentence">수정 문장</label>
+              <textarea id="fixedSentence" rows="3" placeholder="예: Yesterday I went to the clinic."></textarea>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="diagnosticPanel" data-panel="diagnostic">
+          <div class="grid two-one">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">Initial diagnostic</span>
+                  <h3>7개 항목 5점 진단</h3>
+                </div>
+                <button class="icon-button primary" id="saveDiagnosticBtn" type="button">
+                  <span class="icon" data-icon="save"></span>
+                  저장
+                </button>
+              </div>
+              <div id="diagnosticSliders" class="slider-list"></div>
+            </section>
+
+            <section class="panel score-panel">
+              <span class="section-label">Placement</span>
+              <div class="score-number" id="diagnosticAverage">0.0</div>
+              <h3 id="placementTitle">진단을 입력하세요</h3>
+              <p id="placementText">점수를 저장하면 시작 난이도와 권장 훈련 비중이 계산됩니다.</p>
+              <div id="placementMix" class="mix-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="srsPanel" data-panel="srs">
+          <div class="grid two-one">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">Due today</span>
+                  <h3>복습 카드</h3>
+                </div>
+                <span class="status-badge" id="dueCountBadge">0 due</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>상황</th>
+                      <th>표현</th>
+                      <th>상태</th>
+                      <th>다음 복습</th>
+                      <th>처리</th>
+                    </tr>
+                  </thead>
+                  <tbody id="srsTableBody"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">New card</span>
+                  <h3>표현 직접 추가</h3>
+                </div>
+                <button class="icon-button primary" id="manualCardBtn" type="button">
+                  <span class="icon" data-icon="plus"></span>
+                  추가
+                </button>
+              </div>
+              <label class="field-label" for="cardKorean">한국어 상황</label>
+              <input id="cardKorean" type="text" placeholder="예약 시간을 바꾸고 싶다" />
+              <label class="field-label" for="cardEnglish">영어 표현</label>
+              <textarea id="cardEnglish" rows="4" placeholder="I'd like to reschedule my appointment."></textarea>
+              <div class="srs-rules">
+                <span>0일</span><span>1일</span><span>3일</span><span>7일</span><span>14일</span><span>30일</span>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="weeklyPanel" data-panel="weekly">
+          <div class="grid two-one">
+            <section class="panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">Weekly evaluation</span>
+                  <h3>난이도 자동 조정</h3>
+                </div>
+                <button class="icon-button primary" id="evaluateWeekBtn" type="button">
+                  <span class="icon" data-icon="spark"></span>
+                  평가
+                </button>
+              </div>
+              <div id="weeklyInputs" class="slider-list"></div>
+            </section>
+
+            <section class="panel">
+              <span class="section-label">Next week decision</span>
+              <h3 id="adaptiveDecision">평가 대기</h3>
+              <p id="adaptiveReason">Day 7 평가 결과를 입력하면 다음 주 난이도와 훈련 비중을 제안합니다.</p>
+              <div id="weeklyHistory" class="history-list"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="tab-panel" id="promptsPanel" data-panel="prompts">
+          <div class="grid two">
+            <section class="panel prompt-panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">AI conversation</span>
+                  <h3>음성 대화 프롬프트</h3>
+                </div>
+                <button class="icon-button ghost" data-copy-target="conversationPrompt" type="button">
+                  <span class="icon" data-icon="copy"></span>
+                  Copy
+                </button>
+              </div>
+              <pre id="conversationPrompt"></pre>
+            </section>
+
+            <section class="panel prompt-panel">
+              <div class="panel-heading">
+                <div>
+                  <span class="section-label">AI feedback</span>
+                  <h3>피드백 프롬프트</h3>
+                </div>
+                <button class="icon-button ghost" data-copy-target="feedbackPrompt" type="button">
+                  <span class="icon" data-icon="copy"></span>
+                  Copy
+                </button>
+              </div>
+              <pre id="feedbackPrompt"></pre>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
