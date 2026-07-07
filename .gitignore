@@ -1,0 +1,9 @@
+# Local editor files
+.DS_Store
+Thumbs.db
+
+# Generated QA artifacts
+output/
+
+# Dependency folders, if the project later adopts a package manager
+node_modules/
